@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" ng-app="reminder">
+<head>
+    <meta charset="UTF-8">
+    <title>reminder</title>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/angular-animate.js"></script>
+    <script src="js/index.js"></script>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body ng-controller="myCtrl" ng-click="show=false" >
+<div class="reminder">
+    <div class="reminder-left">
+        <div class="header">
+            <div class="logo"></div>
+            <div class="title">提醒事项</div>
+            <div class="plus">
+                <div class="plus-icon" ng-click="add();save()"></div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="head">
+                <div class="clock"></div>
+                已计划
+                <div class="line"></div>
+            </div>
+            <ul class="content-list" ng-init="ed=flase">
+                <li ng-repeat="v in singles track by v.id"  ng-class="{active:v==currentlist}" ng-click="setcurrent($index)">
+                    <span ng-class="v.theme"></span>
+                    <input type="text" ng-model="v.title" ng-keyup="save()">
+                    <div class="line"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="reminder-right" >
+        <div class="header">
+            <div class="magnifier"></div>
+            搜索所有提醒
+        </div>
+        <div class="content" ng-class="currentlist.theme">
+            <div class="head" ng-init="show=false">
+                <div class="title" ng-bind="currentlist.title"></div>
+                <div class="line"></div>
+                <div class="opation" ng-click="show=true;clearbubble($event)">选项</div>
+                <div class="color-opations" ng-show="show" ng-click="clearbubble($event)">
+                    <div class="container" >
+                        <input type="text" ng-model="currentlist.title" ng-keyup="save()">
+                        <p class="color-lists">列表颜色</p>
+                        <ul class="color-imgs">
+                            <li ng-repeat="v in themes" ng-class="{active:currentlist.theme==v}" class="{{v}}" ng-click="currentlist.theme=v;save()">
+                                <span class="circle" ng-class="v"></span>
+                            </li>
+                        </ul>
+                        <span class="delete" ng-click="delete(currentlist.id);save()">删除</span>
+                        <span class="quxiao" ng-click="show=false">取消</span>
+                        <span class="over" ng-click="show=false">完成</span>
+                    </div>
+                </div>
+            </div>
+            <div class="end" ng-click="eb=!eb" ng-init="eb=false" ng-class="{show:eb}">
+                <div class="threeangle"></div>
+                <div class="finish">已完成{{(currentlist.todos|filter:{isDone:true}).length}}项</div>
+                <div class="line1"></div>
+            </div>
+
+
+
+
+            <ul class="finish-opation" ng-init="xianshi=false">
+                <li ng-repeat="v in currentlist.todos|filter:{isDone:true} track by v.id" class="{{currentlist.theme}}" ng-click="setcurrenttodo(v.id)" ng-class="{active:v==currenttodo}" >
+                    <div class="direct" ng-class="currentlist.theme" ng-click="v.isDone=!v.isDone;save()"></div>
+                    <input ng-model="v.name" ng-keyup="save()">
+                    <!--<span ng-bind="v.name"></span>-->
+                    <div class="sin">
+                        <span ng-click="xianshi=!xianshi" ng-show="v==currenttodo" class="{{currentlist.theme}}">详细信息</span>
+                        <div class="opa" ng-class="{bb:v==currenttodo,aa:xianshi}">
+                            <div class="del" ng-click="remove(v.id);save()">删除</div>
+                            <div class="wan" ng-click="xianshi=false">完成</div>
+                        </div>
+                    </div>
+                    <span class="line1"></span>
+                </li>
+            </ul>
+            <ul class="unfinish-opation" ng-init="xianshi=false;chuxian=false">
+                <li ng-repeat="vs in currentlist.todos|filter:{isDone:false} track by vs.id"  ng-click="setcurrenttodo(vs.id)" ng-class="{active:vs==currenttodo}" class="{{currentlist.theme}}">
+                    <div class="direct" ng-class="currentlist.theme" ng-click="vs.isDone=!v.isDone;save()"></div>
+                    <input ng-model="vs.name" ng-keyup="save()">
+                    <div class="sin" >
+                        <span ng-click="xianshi=!xianshi"  ng-show="vs==currenttodo" class="{{currentlist.theme}}">详细信息</span>
+                        <div class="opa" ng-class="{bb:vs==currenttodo,aa:xianshi}">
+                            <div class="del" ng-click="remove(vs.id);save()">删除</div>
+                            <div class="wan" ng-click="xianshi=false">完成</div>
+                        </div>
+                    </div>
+                    <div class="line1"></div>
+                </li>
+            </ul>
+            <div class="newadd" ng-click="addxinxi();save()">
+                新条目
+                <div class="line1" ></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
